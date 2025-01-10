@@ -1,0 +1,55 @@
+/* Menü */
+.navbar-logo img {
+    height: 80px;
+    width: 80px;
+    border-radius: 10px;
+}
+
+.navbar.bg-body-tertiary {
+    background-color: rgba(49, 81, 143, 0.8) !important;
+}
+
+.navbar-nav .nav-link {
+    color: white !important;
+}
+
+.navbar-nav .nav-link.active {
+    color: white !important;
+}
+
+.navbar-toggler-icon {
+    background-color: white !important;
+}
+
+.navbar-nav .nav-item {
+    margin-right: 15px;
+}
+
+/* Kiemelt hírek */
+.KiemeltHírTároló {
+    position: absolute;
+    width: 1500px;
+    height: 300px;
+    left: 50%;
+    top: 163px;
+    background: #D9D9D9;
+    border-radius: 10px;
+    transform: translateX(-50%);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 150px;
+    flex-wrap: wrap;
+}
+
+.KiemeltHírTároló img {
+    width: 300px;
+    height: 200px;
+    object-fit: cover;
+    margin-top: -25px;
+}
+
+.forumgomb {
+    user-select: none; /* Megakadályozza a kép kijelölését */
+    pointer-events: none; /* Nem lehet vele interakcióba lépni */
+}

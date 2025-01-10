@@ -1,0 +1,121 @@
+/* Menü */
+.navbar-logo img {
+    height: 80px;
+    width: 80px;
+    border-radius: 10px;
+}
+
+.navbar.bg-body-tertiary {
+    background-color: rgba(49, 81, 143, 0.8) !important;
+}
+
+.navbar-nav .nav-link {
+    color: white !important;
+}
+
+.navbar-nav .nav-link.active {
+    color: white !important;
+}
+
+.navbar-toggler-icon {
+    background-color: white !important;
+}
+
+.navbar-nav .nav-item {
+    margin-right: 15px;
+}
+
+/* Forum header styling */
+.forum-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #31518fcc;
+    padding: 15px;
+    border-radius: 10px;
+    color: white;
+}
+
+.forum-header button {
+    margin-right: 10px;
+}
+
+/* Forum table styling */
+.table {
+    background-color: #ffffff;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    overflow: hidden;
+}
+
+.table th {
+    background-color: #31518fcc;
+    color: white;
+}
+
+.table td {
+    vertical-align: middle;
+}
+
+/* Pagination styling */
+.pagination .page-link {
+    color: #31518fcc;
+}
+
+.pagination .page-link:hover {
+    background-color: #31518fcc;
+    color: white;
+}
+
+/* Right sidebar styling */
+.card {
+    border: none;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.card-header {
+    font-size: 1.25rem;
+    font-weight: bold;
+}
+
+.list-group-item {
+    font-size: 0.95rem;
+}
+
+/* Dropdown menu */
+.dropdown {
+    margin: 20px 0;
+    border-radius: none;
+    position: relative;
+}
+
+.dropdown {
+    margin: 20px 0;
+
+    border-radius: 10px;
+    font-weight: bold;
+}
+
+.dropdown-menu a {
+    color: #31518fcc;
+}
+
+.dropdown:hover {
+    color: #31518fcc;
+}
+
+.dropdown-menu a:hover {
+    background-color: #31518fcc;
+    color: white;
+}
+
+.forumgomb {
+    user-select: none;
+}
+
+.temaLink{
+    text-decoration: none;
+    color: black;
+    font-size:large;
+    font-weight: bold;
+}
