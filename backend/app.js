@@ -84,8 +84,8 @@ app.use(express.urlencoded({ extended: true }));
 app.use(limiter);
 app.use(cookieParser());
 app.use(cors({
-    origin: 'http://127.0.0.1:5501',
-    credentials: true
+    origin: 'http://127.0.0.1:5501', // A frontend URL-je
+    credentials: true, // Ha sütiket (cookies) is használsz
 }));
 app.use('/uploads', authenticateToken, express.static(path.join(__dirname, 'uploads')));
 
