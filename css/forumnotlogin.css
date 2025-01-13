@@ -1,4 +1,3 @@
-/* Navigáció */
 .navbar-logo img {
     height: 80px;
     width: 80px;
@@ -25,7 +24,6 @@
     margin-right: 15px;
 }
 
-/* Alapstílus */
 body {
     font-family: Arial, sans-serif;
     background-color: #f4f4f9;
@@ -36,97 +34,12 @@ body {
     min-height: 100vh;
 }
 
-/* Navigáció fix helyzetben */
 .navbar {
     position: sticky;
     top: 0;
     z-index: 1000;
 }
 
-/*Tartalom*/
-h1 {
-    text-align: center; 
-    font-size: 36px;
-    font-weight: 600;
-    color: rgba(49, 81, 143, 0.8);
-    margin-top: 100px;
-    margin-bottom: 20px;
-}
-
-.tarolo {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    height: 100vh;
+h2{
     text-align: center;
-    color: rgba(49, 81, 143, 0.8);
-}
-
-.login {
-    display: flex;
-    justify-content: center;
-}
-
-.login button {
-    padding: 12px 24px;
-    background-color: rgba(49, 81, 143, 0.9);
-    color: white;
-    font-size: 18px;
-    border: 2px solid rgba(49, 81, 143, 1);
-    border-radius: 5px;
-    cursor: pointer; 
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
-}
-
-.login button:hover {
-    background-color: rgba(49, 81, 143, 0.9);
-    color: #e3e3e3;
-    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.3);
-}
-
-.login button:active {
-    transform: scale(0.98);
-    box-shadow: 0 3px 5px rgba(0, 0, 0, 0.2); 
-}
-
-/* Keresés form */
-form {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin-top: 20px;
-}
-
-form .bi-search {
-    margin-right: 10px;
-}
-
-form .social-icons {
-    display: flex;
-    margin-left: 20px;
-}
-
-form .social-icons i {
-    margin-right: 10px;
-}
-
-form .form-control {
-    width: 200px;
-}
-
-/* Responsív dizájn */
-@media (max-width: 768px) {
-    .navbar-nav .nav-link {
-        font-size: 14px;
-    }
-
-    .login button {
-        font-size: 16px;
-        padding: 10px 20px;
-    }
-
-    .social-icons i {
-        margin-right: 5px;
-    }
 }
