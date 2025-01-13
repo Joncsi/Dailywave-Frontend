@@ -84,16 +84,17 @@ app.use(express.urlencoded({ extended: true }));
 app.use(limiter);
 app.use(cookieParser());
 app.use(cors({
-    origin: 'http://127.0.0.1:5501', // A frontend URL-je
-    credentials: true, // Ha sütiket (cookies) is használsz
+    origin: 'http://127.0.0.1:5500', // A frontend URL-je
+    credentials: true,
 }));
+
 app.use('/uploads', authenticateToken, express.static(path.join(__dirname, 'uploads')));
 
 // --- restAPI végpontok ---
 
 // regisztráció
-app.post('/api/register', (req, res) => {
-    const { email, password, username } = req.body;
+app.post('/api/register', async (req, res) => {
+    const { email, password, name } = req.body;
     const errors = [];
 
     if (!validator.isEmail(email)) {
@@ -104,7 +105,7 @@ app.post('/api/register', (req, res) => {
         errors.push({ error: 'A jelszónak minimum 6 karakterből kell állnia' });
     }
 
-    if (validator.isEmpty(username)) {
+    if (validator.isEmpty(name)) {
         errors.push({ error: 'Töltsd ki a nevet' });
     }
 
@@ -112,29 +113,29 @@ app.post('/api/register', (req, res) => {
         return res.status(400).json({ errors });
     }
 
-    bcrypt.hash(password, 10, (err, hash) => {
-        if (err) {
-            return res.status(500).json({ error: 'Hiba a jelszó hash-elésekor' });
-        }
+    try {
+        const hash = await bcrypt.hash(password, 10);
         const sql = 'INSERT INTO users (email, password, role, profile_picture, username) VALUES (?, ?, ?, ?, ?)';
-        pool.query(sql, [email, hash, 'user', 'default.png', username], (err2, result) => {
+        pool.query(sql, [email, hash, 'user', 'default.png', name], (err2, result) => {
             if (err2) {
                 if (err2.code === 'ER_DUP_ENTRY') {
                     return res.status(400).json({ error: 'Az email már foglalt' });
                 }
                 return res.status(500).json({ error: 'Hiba történt a regisztráció során' });
             }
-
             return res.status(201).json({ message: 'Sikeres regisztráció' });
         });
-    });
+    } catch (err) {
+        return res.status(500).json({ error: 'Hiba történt a jelszó hash-elésekor' });
+    }
 });
+
 
 // login
 app.post('/api/login', (req, res) => {
     const { email, password } = req.body;
-    const errors = [];
 
+    const errors = [];
     if (!validator.isEmail(email)) {
         errors.push({ error: 'Add meg az email címet' });
     }
@@ -150,28 +151,27 @@ app.post('/api/login', (req, res) => {
     const sql = 'SELECT * FROM users WHERE email LIKE ?';
     pool.query(sql, [email], (err, result) => {
         if (err) {
-            console.log(err);
-            return res.status(500).json({ error: 'Hiba az SQL-ben' });
+            console.error('SQL Hiba:', err); // Kivételes hiba kiírása
+            return res.status(500).json({ error: 'Belső hiba történt a szerveren' });
         }
 
         if (result.length === 0) {
-            return res.status(404).json({ error: 'A felhasználó nem található' });
+            return res.status(404).json({ error: 'Felhasználó nem található' });
         }
 
         const user = result[0];
         bcrypt.compare(password, user.password, (err, isMatch) => {
+            if (err) {
+                console.error('Jelszó összehasonlítási hiba:', err); // Hiba kiírása
+                return res.status(500).json({ error: 'Hiba történt a jelszó ellenőrzésében' });
+            }
             if (isMatch) {
                 const token = jwt.sign(
-                    {
-                        id: user.user_id
-                    },
+                    { id: user.user_id },
                     JWT_SECRET,
-                    {
-                        expiresIn: '1y'
-                    }
+                    { expiresIn: '1y' }
                 );
 
-                // Token hozzáadása cookie-ként
                 res.cookie('auth_token', token, {
                     httpOnly: true,
                     secure: true,
