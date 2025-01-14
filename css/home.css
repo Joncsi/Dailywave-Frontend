@@ -24,6 +24,9 @@
 .navbar-nav .nav-item {
     margin-right: 15px;
 }
+.icon-user:hover{
+    scale: 1.1;
+}
 
 /* Kiemelt hírek */
 .KiemeltHírTároló {

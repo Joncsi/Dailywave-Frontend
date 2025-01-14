@@ -114,21 +114,42 @@ app.post('/api/register', async (req, res) => {
     }
 
     try {
-        const hash = await bcrypt.hash(password, 10);
-        const sql = 'INSERT INTO users (email, password, role, profile_picture, username) VALUES (?, ?, ?, ?, ?)';
-        pool.query(sql, [email, hash, 'user', 'default.png', name], (err2, result) => {
-            if (err2) {
-                if (err2.code === 'ER_DUP_ENTRY') {
-                    return res.status(400).json({ error: 'Az email már foglalt' });
-                }
+        // Ellenőrzés: e-mail vagy név már létezik-e
+        const checkSql = 'SELECT * FROM users WHERE email = ? OR username = ?';
+        pool.query(checkSql, [email, name], async (err, result) => {
+            if (err) {
+                console.error('Hiba az ellenőrzés során:', err);
                 return res.status(500).json({ error: 'Hiba történt a regisztráció során' });
             }
-            return res.status(201).json({ message: 'Sikeres regisztráció' });
+
+            if (result.length > 0) {
+                const conflicts = [];
+                if (result.some(user => user.email === email)) {
+                    conflicts.push('Az email már foglalt');
+                }
+                if (result.some(user => user.username === name)) {
+                    conflicts.push('A felhasználónév már foglalt');
+                }
+                return res.status(400).json({ errors: conflicts.map(error => ({ error })) });
+            }
+
+            // Ha nincs ütközés, folytatódhat a regisztráció
+            const hash = await bcrypt.hash(password, 10);
+            const sql = 'INSERT INTO users (email, password, role, profile_picture, username) VALUES (?, ?, ?, ?, ?)';
+            pool.query(sql, [email, hash, 'user', 'default.png', name], (err2, result) => {
+                if (err2) {
+                    console.error('Hiba az adatbázisba írás során:', err2);
+                    return res.status(500).json({ error: 'Hiba történt a regisztráció során' });
+                }
+                return res.status(201).json({ message: 'Sikeres regisztráció' });
+            });
         });
     } catch (err) {
-        return res.status(500).json({ error: 'Hiba történt a jelszó hash-elésekor' });
+        console.error('Hiba történt a regisztráció során:', err);
+        return res.status(500).json({ error: 'Hiba történt a szerveren' });
     }
 });
+
 
 
 // login
@@ -156,7 +177,7 @@ app.post('/api/login', (req, res) => {
         }
 
         if (result.length === 0) {
-            return res.status(404).json({ error: 'Felhasználó nem található' });
+            return res.status(401).json({ error: 'Helytelen email cím vagy jelszó' }); // Egyértelmű üzenet
         }
 
         const user = result[0];
@@ -181,7 +202,7 @@ app.post('/api/login', (req, res) => {
 
                 return res.status(200).json({ message: 'Sikeres bejelentkezés' });
             } else {
-                return res.status(401).json({ error: 'Rossz a jelszó' });
+                return res.status(401).json({ error: 'Helytelen email cím vagy jelszó' }); // Egyértelmű üzenet
             }
         });
     });
