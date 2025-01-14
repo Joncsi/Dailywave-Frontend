@@ -20,6 +20,20 @@ async function getProfileName() {
     }
 }
 
+function previewImage(event) {
+    const file = event.target.files[0];
+    const reader = new FileReader();
+
+    reader.onload = function() {
+        const preview = document.getElementById('profilePic');
+        preview.src = reader.result;
+    };
+
+    if (file) {
+        reader.readAsDataURL(file); // Fájl beolvasása
+    }
+}
+
 document.addEventListener('DOMContentLoaded', () => {
     getProfileName();
 });

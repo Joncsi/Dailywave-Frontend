@@ -267,6 +267,65 @@ app.get('/api/profile/getProfileName', authenticateToken, (req, res) => {
     });
 });
 
+app.put('/api/editProfilePsw', authenticateToken, (req, res) => {
+    const psw = req.body.psw;
+    const user_id = req.user.id;
+
+    const salt = 10;
+
+    // Ha a jelszó üres vagy nem elég hosszú
+    if (!psw || !validator.isLength(psw, { min: 6 })) {
+        return res.status(400).json({ error: 'A jelszónak legalább 6 karakterből kell állnia' });
+    }
+
+    bcrypt.hash(psw, salt, (err, hash) => {
+        if (err) {
+            return res.status(500).json({ error: 'Hiba a sózáskor' });
+        }
+
+        const sql = 'UPDATE users SET password = COALESCE(NULLIF(?, ""), password) WHERE user_id = ?';
+        pool.query(sql, [hash, user_id], (err, result) => {
+            if (err) {
+                return res.status(500).json({ error: 'Hiba az SQL-ben' });
+            }
+
+            return res.status(200).json({ message: 'Jelszó frissítve' });
+        });
+    });
+});
+
+app.put('/api/editProfilePic', authenticateToken, (req, res) => {
+    const user_id = req.user.id;
+
+    if (!req.files || !req.files.profile_picture) {
+        return res.status(400).json({ error: 'Nincs kiválasztott fájl!' });
+    }
+
+    const profilePic = req.files.profile_pic;
+    
+    const allowedTypes = ['image/jpeg', 'image/png', 'image/gif'];
+    if (!allowedTypes.includes(profilePic.mimetype)) {
+        return res.status(400).json({ error: 'Csak képfájlok engedélyezettek!' });
+    }
+
+    const uploadPath = path.join(__dirname, 'uploads', profilePic.name);
+
+    profilePic.mv(uploadPath, (err) => {
+        if (err) {
+            return res.status(500).json({ error: 'Hiba a fájl feltöltésekor' });
+        }
+
+        const sql = 'UPDATE users SET profile_picture = ? WHERE user_id = ?';
+        pool.query(sql, [profilePic.name, user_id], (err, result) => {
+            if (err) {
+                return res.status(500).json({ error: 'Hiba az adatbázis frissítésekor' });
+            }
+
+            return res.status(200).json({ message: 'Profilkép frissítve' });
+        });
+    });
+});
+
 app.post('/api/logout', authenticateToken, (req, res) => {
     //res.clearCookie('token');
     res.status(200).json({ message: 'Sikeres kijelentkezés' });
