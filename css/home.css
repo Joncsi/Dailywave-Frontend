@@ -50,6 +50,8 @@
 }
 
 .forumgomb {
-    user-select: none; /* Megakadályozza a kép kijelölését */
-    pointer-events: none; /* Nem lehet vele interakcióba lépni */
+    user-select: none;
+    /* Megakadályozza a kép kijelölését */
+    pointer-events: none;
+    /* Nem lehet vele interakcióba lépni */
 }

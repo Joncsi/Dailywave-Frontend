@@ -45,7 +45,8 @@ body {
 
 /* Bejelentkezési rész */
 .tarolo {
-    margin: auto; /* Középre helyezés */
+    margin: auto;
+    /* Középre helyezés */
     background-color: #ffffff;
     border-radius: 10px;
     padding: 20px;
@@ -97,7 +98,8 @@ body {
 }
 
 .login button:hover {
-    background-color: #31518f; /* Hover szín */
+    background-color: #31518f;
+    /* Hover szín */
 }
 
 /* Képek méretezése a navigációs sávban */
@@ -110,7 +112,8 @@ form i img {
 /* Bejelentkezési oldal cím */
 .login-title {
     font-size: 30px;
-    color: rgba(49, 81, 143, 0.8); /* Kék szín */
+    color: rgba(49, 81, 143, 0.8);
+    /* Kék szín */
     text-align: center;
     margin-bottom: 20px;
     font-weight: bold;
@@ -121,16 +124,19 @@ form i img {
     text-align: center;
     margin-top: 15px;
     font-size: 14px;
-    color: rgba(49, 81, 143, 0.8); /* Kék szín */
+    color: rgba(49, 81, 143, 0.8);
+    /* Kék szín */
 }
 
 .existing-account .login-link {
-    color: rgba(49, 81, 143, 0.8); /* Kék szín */
+    color: rgba(49, 81, 143, 0.8);
+    /* Kék szín */
     text-decoration: underline;
     cursor: pointer;
     transition: color 0.3s ease;
 }
 
 .existing-account .login-link:hover {
-    color: #31518f; /* Hover szín */
+    color: #31518f;
+    /* Hover szín */
 }

@@ -49,36 +49,45 @@ body {
     border-radius: 10px;
     padding: 20px;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-    border: 2px solid rgba(49, 81, 143, 0.8); /* Kék színű keret */
+    border: 2px solid rgba(49, 81, 143, 0.8);
+    /* Kék színű keret */
     width: 100%;
-    max-width: 400px; /* Maximális szélesség a kényelem érdekében */
+    max-width: 400px;
+    /* Maximális szélesség a kényelem érdekében */
     display: flex;
     flex-direction: column;
     gap: 20px;
     align-items: center;
     justify-content: center;
-    margin: auto auto; /* Vízszintes középre igazítás és függőleges eltolás */
+    margin: auto auto;
+    /* Vízszintes középre igazítás és függőleges eltolás */
 }
 
 
 /* Profilkép */
 .profile-image img {
-    width: 120px; /* A kép mérete */
-    height: 120px; 
-    border-radius: 50%; /* Kör alakú */
-    margin-bottom: 15px; /* Kép és név közötti távolság */
+    width: 120px;
+    /* A kép mérete */
+    height: 120px;
+    border-radius: 50%;
+    /* Kör alakú */
+    margin-bottom: 15px;
+    /* Kép és név közötti távolság */
 }
 
 /* Név */
 .profile-info .name {
     font-size: 22px;
-    color: rgba(49, 81, 143, 0.8); /* Kék szín */
+    color: rgba(49, 81, 143, 0.8);
+    /* Kék szín */
     margin: 0;
-    text-align: center; /* Középre igazítás */
+    text-align: center;
+    /* Középre igazítás */
 }
 
 /* Gombok */
-.edit-button, .back-button {
+.edit-button,
+.back-button {
     margin-top: 10px;
     padding: 10px;
     background-color: rgba(49, 81, 143, 0.8);
@@ -90,8 +99,7 @@ body {
     transition: background-color 0.3s ease;
 }
 
-.edit-button:hover, .back-button:hover {
+.edit-button:hover,
+.back-button:hover {
     background-color: #31518f;
 }
-
-

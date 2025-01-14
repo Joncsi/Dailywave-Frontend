@@ -16,7 +16,7 @@ async function login() {
     });
 
     const data = await res.json();
-    
+
     if (res.ok) {
         resetInputs();
         alert(data.message);

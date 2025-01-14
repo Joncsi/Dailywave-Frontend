@@ -41,6 +41,7 @@ body {
     top: 0;
     z-index: 1000;
 }
+
 /* Forum header styling */
 .forum-header {
     display: flex;
@@ -129,9 +130,9 @@ body {
     user-select: none;
 }
 
-.temaLink{
+.temaLink {
     text-decoration: none;
     color: black;
-    font-size:large;
+    font-size: large;
     font-weight: bold;
 }

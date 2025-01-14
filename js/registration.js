@@ -30,7 +30,7 @@ async function register() {
     }
 
     const data = await res.json();
-    
+
     if (res.ok) {
         resetInputs();
         alert(data.message);
