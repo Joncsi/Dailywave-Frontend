@@ -208,6 +208,65 @@ app.post('/api/login', (req, res) => {
     });
 });
 
+// profil name szerkesztése
+app.put('/api/editProfileName', authenticateToken, (req, res) => {
+    const name = req.body.name;
+    const user_id = req.user.id;
+
+    if (!name) {
+        return res.status(400).json({ error: 'A név nem lehet üres' });
+    }
+
+    const sqlCheck = 'SELECT username FROM users WHERE user_id = ?';
+    pool.query(sqlCheck, [user_id], (err, result) => {
+        if (err) {
+            return res.status(500).json({ error: 'Hiba történt a felhasználó adatainak lekérése során' });
+        }
+
+        const currentName = result[0].username;
+        if (name === currentName) {
+            return res.status(400).json({ error: 'Az új név nem lehet azonos a jelenlegi névvel!' });
+        }
+
+        const checkSql = 'SELECT username FROM users WHERE username = ? AND user_id != ?';
+        pool.query(checkSql, [name, user_id], (err2, result2) => {
+            if (err2) {
+                return res.status(500).json({ error: 'Hiba történt a név ellenőrzése során' });
+            }
+
+            if (result2.length > 0) {
+                return res.status(400).json({ error: 'Ez a név már foglalt' });
+            }
+
+            const sql = 'UPDATE users SET username = ? WHERE user_id = ?';
+            pool.query(sql, [name, user_id], (err3, result3) => {
+                if (err3) {
+                    return res.status(500).json({ error: 'Hiba történt a név frissítése során' });
+                }
+
+                // Visszaküldjük az új nevet
+                res.status(200).json({ message: 'Név sikeresen módosítva!', name: name });
+            });
+        });
+    });
+});
+
+app.get('/api/profile/getProfileName', authenticateToken, (req, res) => {
+    const user_id = req.user.id;
+    const sql = 'SELECT username FROM users WHERE user_id = ?';
+    pool.query(sql, [user_id], (err, result) => {
+        if (err) {
+            return res.status(500).json({ error: 'Hiba történt a felhasználó adatainak lekérése során' });
+        }
+
+        if (result.length === 0) {
+            return res.status(404).json({ error: 'Felhasználó nem található' });
+        }
+
+        res.status(200).json({ name: result[0].username });
+    });
+});
+
 app.post('/api/logout', authenticateToken, (req, res) => {
     //res.clearCookie('token');
     res.status(200).json({ message: 'Sikeres kijelentkezés' });

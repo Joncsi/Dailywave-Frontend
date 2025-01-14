@@ -134,3 +134,7 @@ form i img {
 .existing-account .login-link:hover {
     color: #31518f;
 }
+
+a{
+    text-decoration: none;
+}
