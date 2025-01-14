@@ -1,4 +1,4 @@
-const btnLogin = document.getElementsByClassName('login')[0];
+const btnLogin = document.getElementById('btnLogin');
 
 btnLogin.addEventListener('click', login);
 
@@ -6,40 +6,35 @@ async function login() {
     const email = document.getElementById('email').value;
     const psw = document.getElementById('psw').value;
 
-    try {
-        const res = await fetch('http://127.0.0.1:3000/api/login', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ email, psw }),
-            credentials: 'include',
-        });
+    const res = await fetch('http://127.0.0.1:3000/api/login', {
+        method: 'POST',
+        headers: {
+            'content-type': 'application/json'
+        },
+        body: JSON.stringify({ email, password: psw }),
+        credentials: 'include'
+    });
 
-        // Ellenőrizzük, hogy a válasz sikeres volt
-        if (!res.ok) {
-            throw new Error(`Hiba történt: ${res.status}`);
+    const data = await res.json();
+    
+    if (res.ok) {
+        resetInputs();
+        alert(data.message);
+        window.location.href = '../home.html';
+    } else if (data.errors) {
+        let errorMessage = '';
+        for (let i = 0; i < data.errors.length; i++) {
+            errorMessage += `${data.errors[i].error}\n`
         }
-
-        // Próbálkozunk JSON választ kapni
-        let data;
-        try {
-            data = await res.json();  // JSON válasz
-        } catch (error) {
-            console.error('Nem JSON válasz:', error);
-            alert('A válasz nem megfelelő formátumban van.');
-            return;
-        }
-
-        // Ellenőrizzük, hogy van-e üzenet a válaszban
-        if (data.message) {
-            alert(data.message);
-            window.location.href = '../home.html';
-        } else {
-            alert('Ismeretlen válasz a szervertől');
-        }
-    } catch (error) {
-        console.error('Hiba történt:', error);
-        alert('A válasz nem megfelelő formátumban van, vagy a backend nem válaszolt megfelelően.');
+        alert(errorMessage);
+    } else if (data.error) {
+        alert(data.error);
+    } else {
+        alert('Ismeretlen hiba');
     }
+}
+
+function resetInputs() {
+    document.getElementById('email').value = '';
+    document.getElementById('psw').value = '';
 }
