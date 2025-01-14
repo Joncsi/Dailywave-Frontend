@@ -1,4 +1,4 @@
-/* Menü */
+/* Menü*/
 .navbar-logo img {
     height: 80px;
     width: 80px;
@@ -24,32 +24,311 @@
 .navbar-nav .nav-item {
     margin-right: 15px;
 }
-.icon-user:hover{
-    scale: 1.1;
+
+/* Kiemelt szürke szakasz stílusa */
+.kiemelt-szurke-section {
+    width: 80%;
+    margin: 50px auto;
+    padding: 20px;
+    background-color: #D9D9D9; /* Szürke háttér */
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
 
-/* Kiemelt hírek */
-.KiemeltHírTároló {
-    position: absolute;
-    width: 1500px;
-    height: 300px;
-    left: 50%;
-    top: 163px;
-    background: #D9D9D9;
+.kiemelt-szurke-section h2 {
+    text-align: center;
+    font-size: 24px;
+    margin-bottom: 20px;
+    color: #333;
+}
+
+/* Rácsos elrendezés a kiemelt hírekhez */
+.kiemelt-szurke-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 40px;
+    justify-items: center;
+}
+
+/* Kiemelt kártyák stílusa */
+.kiemelt-kártya {
+    background-color: #FFFFFF;
     border-radius: 10px;
-    transform: translateX(-50%);
+    width: 300px;
+    height: 250px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s;
+}
+
+.kiemelt-kártya img {
+    width: 260px;
+    height: 160px;
+    border-radius: 8px;
+    object-fit: cover;
+}
+
+.kiemelt-kártya p {
+    margin-top: 10px;
+    font-size: 16px;
+    text-align: center;
+    color: red;
+}
+
+.kiemelt-kártya p:hover {
+    color: darkred;
+    cursor: pointer;
+}
+
+/* Hover hatás */
+.kiemelt-kártya:hover {
+    transform: scale(1.05);
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+}
+
+
+/* Általános szakasz stílus */
+section {
+    width: 80%;
+    margin: 50px auto;
+    padding: 20px;
+    background-color: #E0E0E0;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+section h2 {
+    text-align: center;
+    font-size: 24px;
+    margin-bottom: 20px;
+    color: #333;
+}
+
+/* Rácsos elrendezés */
+.hír-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 40px;
+    justify-items: center;
+}
+
+/* Kártyák stílusa */
+.hír-kártya {
+    background-color: #FFFFFF;
+    border-radius: 10px;
+    width: 300px;
+    height: 250px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s;
+}
+
+.hír-kártya img {
+    width: 260px;
+    height: 160px;
+    border-radius: 8px;
+    object-fit: cover;
+}
+
+.hír-kártya p {
+    margin-top: 10px;
+    font-size: 16px;
+    text-align: center;
+}
+
+/* Hover hatás */
+.hír-kártya:hover {
+    transform: scale(1.05);
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+}
+
+/* Sport szakasz színe */
+.sport-section {
+    background-color: #BBDEFB; /* Világoskék árnyalat */
+}
+
+/* Politika szakasz színe */
+.politika-section {
+    background-color: #BBDEFB; /* Világoskék árnyalat */
+}
+
+/* Magyarország szakasz színe */
+.magyarorszag-section {
+    background-color: #BBDEFB; /* Világoskék árnyalat */
+}
+
+/* Általános hírek színe */
+.altalanos-section {
+    background-color: #BBDEFB; /* Világoskék árnyalat */
+}
+
+/* Kiemelt kártyák címei és képei */
+.kiemelt-kártya p,
+.kiemelt-kártya img {
+    cursor: pointer; /* Címek és képek pointer kurzor */
+}
+
+/* Kiemelt kártyák címeinek hover hatása */
+.kiemelt-kártya p:hover {
+    color: black; /* Fekete szín hover hatásra */
+}
+
+/* Általános hírek kártyáinak címei és képei */
+.hír-kártya p,
+.hír-kártya img {
+    cursor: pointer; /* Címek és képek pointer kurzor */
+}
+
+/* Általános hírek kártyáihoz tartozó címek hover hatása */
+.hír-kártya p:hover {
+    color: black; /* Fekete szín hover hatásra */
+}
+
+/* --- hozzáadás gomb --- */
+.fixed {
+    position: fixed;
+    right: 30px;
+    top: 50%;
+    background-color: rgba(49, 81, 143, 0.8) !important;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    cursor: pointer;
+    z-index: 1000;
     display: flex;
     justify-content: center;
     align-items: center;
-    gap: 150px;
-    flex-wrap: wrap;
 }
 
-.KiemeltHírTároló img {
-    width: 300px;
-    height: 200px;
-    object-fit: cover;
-    margin-top: -25px;
+.fixed:hover {
+    transform: scale(1.1);
+}
+
+.fixed i {
+    font-size: 2.5rem;
+    color: white;
+    background-color: inherit;
+}
+
+.fixed img {
+    position: fixed;
+    right: 30px;
+    top: 50%;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    cursor: pointer;
+    z-index: 1000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Kapcsolat szakasz stílusa */
+.kapcsolat-section {
+    background-color: #F9F9F9; /* Világos háttérszín */
+    padding: 20px 20px; /* Tágasabb padding helyett kisebb */
+    font-size: 14px;
+    margin-top: 10px; /* Kisebb távolság az előző szakasztól */
+    border-top: 1px 1px solid #ddd; /* Finom elválasztás a szakaszok között */
+}
+
+.kapcsolat-section h2 {
+    color: #333; /* A cím színe */
+    font-size: 24px;
+    margin-bottom: 15px;
+}
+
+.kapcsolat-section p {
+    color: #666; /* Szöveg színe */
+    font-size: 14px;
+    margin-bottom: 20px;
+}
+
+.kapcsolat-section a {
+    color: #007BFF; /* Linkek színe */
+    text-decoration: none;
+}
+
+.kapcsolat-section a:hover {
+    text-decoration: underline; /* Link hover effekt */
+}
+
+/* Ügyfélszolgálat szakasz */
+.kapcsolat-section .row {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.kapcsolat-section .col-12 {
+    font-size: 16px;
+    color: #333;
+}
+
+.kapcsolat-section .col-12 p {
+    font-size: 14px;
+    color: #666;
+}
+
+
+/* --- Footer --- */
+.footer {
+    display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  height: 100px; /* Ha a magasságot fixálni akarod */
+  background-color: rgba(49, 81, 143, 0.8);
+  padding: 0 50px;
+  box-sizing: border-box;
+  margin-top: 0; /* eltávolítottam a felesleges margót */
+}
+
+.footer img {
+    user-select: none;
+}
+
+.footer .footerKep,
+.footer .footerKep2 {
+    margin: 0;
+}
+
+.footer .newsLetter {
+    background-color: #D9D9D9;
+    color: black;
+    font-weight: bold;
+    border: none;
+    width: 200px;
+    height: 50px;
+    border-radius: 10px;
+    font-size: 18px;
+}
+
+.footer .newsLetter:hover {
+    scale: 1.05;
+}
+
+@media (max-width: 768px) {
+    .footer {
+        flex-direction: column;
+        height: auto;
+        padding: 20px;
+        text-align: center;
+    }
+
+    .footer img {
+        margin: 10px 0;
+    }
+
+    .footer .newsLetter {
+        margin-top: 20px;
+    }
 }
 
 .forumgomb {

@@ -1,0 +1,97 @@
+/* Menü */
+.navbar-logo img {
+    height: 80px;
+    width: 80px;
+    border-radius: 10px;
+}
+
+.navbar.bg-body-tertiary {
+    background-color: rgba(49, 81, 143, 0.8) !important;
+}
+
+.navbar-nav .nav-link {
+    color: white !important;
+}
+
+.navbar-nav .nav-link.active {
+    color: white !important;
+}
+
+.navbar-toggler-icon {
+    background-color: white !important;
+}
+
+.navbar-nav .nav-item {
+    margin-right: 15px;
+}
+
+/* Alapstílus */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f9;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+/* Navigáció fix helyzetben */
+.navbar {
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+/* Profil nézet konténer */
+.profile-container {
+    background-color: #ffffff;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    border: 2px solid rgba(49, 81, 143, 0.8); /* Kék színű keret */
+    width: 100%;
+    max-width: 400px; /* Maximális szélesség a kényelem érdekében */
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    align-items: center;
+    justify-content: center;
+    margin: auto auto; /* Vízszintes középre igazítás és függőleges eltolás */
+}
+
+
+/* Profilkép */
+.profile-image img {
+    width: 120px; /* A kép mérete */
+    height: 120px; 
+    border-radius: 50%; /* Kör alakú */
+    margin-bottom: 15px; /* Kép és név közötti távolság */
+}
+
+/* Név */
+.profile-info .name {
+    font-size: 22px;
+    color: rgba(49, 81, 143, 0.8); /* Kék szín */
+    margin: 0;
+    text-align: center; /* Középre igazítás */
+}
+
+/* Gombok */
+.edit-button, .back-button {
+    margin-top: 10px;
+    padding: 10px;
+    background-color: rgba(49, 81, 143, 0.8);
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    width: 100%;
+    transition: background-color 0.3s ease;
+}
+
+.edit-button:hover, .back-button:hover {
+    background-color: #31518f;
+}
+
+
