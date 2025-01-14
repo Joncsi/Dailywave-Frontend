@@ -92,3 +92,7 @@ body {
         margin-top: 20px;
     }
 }
+
+.profileImg:hover{
+    scale: 1.1;
+}

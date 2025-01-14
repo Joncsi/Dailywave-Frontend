@@ -138,3 +138,7 @@ form i img {
 a{
     text-decoration: none;
 }
+
+.profileImg:hover{
+    scale: 1.1;
+}

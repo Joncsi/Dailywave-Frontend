@@ -140,3 +140,7 @@ form i img {
     color: #31518f;
     /* Hover szín */
 }
+
+.profileImg:hover{
+    scale: 1.1;
+}

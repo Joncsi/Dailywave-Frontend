@@ -96,4 +96,6 @@
     font-style: italic;
 }
 
-
+.profileImg:hover{
+    scale: 1.1;
+}

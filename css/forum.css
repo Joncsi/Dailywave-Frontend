@@ -136,3 +136,7 @@ body {
     font-size: large;
     font-weight: bold;
 }
+
+.profileImg:hover{
+    scale: 1.1;
+}

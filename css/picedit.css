@@ -82,3 +82,6 @@ body {
     align-items: center;
 }
 
+.profileImg:hover{
+    scale: 1.1;
+}

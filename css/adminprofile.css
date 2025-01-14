@@ -95,3 +95,6 @@ body {
 }
 
 
+.profileImg:hover{
+    scale: 1.1;
+}

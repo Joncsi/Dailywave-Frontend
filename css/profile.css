@@ -104,3 +104,6 @@ body {
     background-color: #31518f;
 }
 
+.profileImg:hover{
+    scale: 1.1;
+}
