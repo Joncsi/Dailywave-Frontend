@@ -1,6 +1,6 @@
 async function getProfileName() {
     try {
-        const res = await fetch('http://127.0.0.1:3000/api/profile/getProfileName', {
+        const res = await fetch('http://127.0.0.1:3000/api/getProfileName', {
             method: 'GET',
             credentials: 'include',
         });
@@ -9,7 +9,6 @@ async function getProfileName() {
             const data = await res.json();
             console.log('Aktuális név:', data.name);
 
-            // A név frissítése a profil oldalon
             const userNameElement = document.getElementById('user-name');
             userNameElement.textContent = data.name;
         } else {
@@ -20,20 +19,38 @@ async function getProfileName() {
     }
 }
 
-function previewImage(event) {
-    const file = event.target.files[0];
-    const reader = new FileReader();
+async function getProfilPic() {
+    try {
+        const res = await fetch('http://127.0.0.1:3000/api/getProfilePic', {
+            method: 'GET',
+            credentials: 'include'
+        });
 
-    reader.onload = function() {
-        const preview = document.getElementById('profilePic');
-        preview.src = reader.result;
-    };
+        if (res.ok) {
+            const data = await res.json();
+            console.log(data);
 
-    if (file) {
-        reader.readAsDataURL(file); // Fájl beolvasása
+            if (data.profilePicUrl) {
+                const editPic = document.getElementById('profilePic');
+                editPic.style.backgroundImage = `url('http://127.0.0.1:3000${data.profilePicUrl}')`;
+            } else {
+                console.log('Profile picture is not set.');
+            }
+        } else {
+            console.error('Failed to fetch profile picture.');
+        }
+    } catch (error) {
+        console.error('Error fetching profile picture:', error);
     }
 }
 
 document.addEventListener('DOMContentLoaded', () => {
     getProfileName();
+    getProfilPic();
+});
+
+
+document.addEventListener('DOMContentLoaded', () => {
+    getProfileName();
+    getProfilPic();
 });

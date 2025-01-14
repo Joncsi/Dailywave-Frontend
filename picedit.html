@@ -68,24 +68,21 @@
 
     <div class="tarolo">
         <h1 class="login-title">Profilkép módosítása</h1>
-        <!-- Profilkép előnézeti kép -->
         <div id="preview-container" class="input">
             <img id="preview" src="./img/default-profile-pic.png" alt="Profilkép előnézet" class="preview-img">
         </div>
-
-        <!-- Profilkép feltöltő input -->
         <div class="input">
             <input type="file" id="profilePicInput" accept="image/*" onchange="previewImage(event)">
         </div>
-        
         <div class="login">
             <button type="button" id="btnSavePic" onclick="saveProfilePic()">Mentés</button>
         </div>
-
         <p class="existing-account">
             Vissza a profilhoz? <a href="profile.html" class="login-link">Vissza</a>.
         </p>
     </div>
+
+    <div id="loading" style="display: none; text-align: center;">Feltöltés folyamatban...</div>
 
     <script src="./js/picedit.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>

@@ -107,3 +107,16 @@ body {
 .profileImg:hover{
     scale: 1.1;
 }
+
+.profilePic{
+    height: 150px;
+    width: 150px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    background-image:url(../img/UnknownPic.png);
+    background-size: cover;
+    background-position: center;
+}

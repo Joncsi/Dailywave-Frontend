@@ -251,7 +251,7 @@ app.put('/api/editProfileName', authenticateToken, (req, res) => {
     });
 });
 
-app.get('/api/profile/getProfileName', authenticateToken, (req, res) => {
+app.get('/api/getProfileName', authenticateToken, (req, res) => {
     const user_id = req.user.id;
     const sql = 'SELECT username FROM users WHERE user_id = ?';
     pool.query(sql, [user_id], (err, result) => {
@@ -294,35 +294,43 @@ app.put('/api/editProfilePsw', authenticateToken, (req, res) => {
     });
 });
 
-app.put('/api/editProfilePic', authenticateToken, (req, res) => {
+app.put('/api/editProfilePic', authenticateToken, upload.single('profile_pic'), (req, res) => {
     const user_id = req.user.id;
 
-    if (!req.files || !req.files.profile_picture) {
+    if (!req.file) {
         return res.status(400).json({ error: 'Nincs kiválasztott fájl!' });
     }
 
-    const profilePic = req.files.profile_pic;
-    
-    const allowedTypes = ['image/jpeg', 'image/png', 'image/gif'];
-    if (!allowedTypes.includes(profilePic.mimetype)) {
-        return res.status(400).json({ error: 'Csak képfájlok engedélyezettek!' });
-    }
+    const profilePic = req.file;
+    const uploadPath = path.join(__dirname, 'uploads', profilePic.filename);
 
-    const uploadPath = path.join(__dirname, 'uploads', profilePic.name);
-
-    profilePic.mv(uploadPath, (err) => {
+    const sql = 'UPDATE users SET profile_picture = ? WHERE user_id = ?';
+    pool.query(sql, [profilePic.filename, user_id], (err, result) => {
         if (err) {
-            return res.status(500).json({ error: 'Hiba a fájl feltöltésekor' });
+            return res.status(500).json({ error: 'Hiba az adatbázis frissítésekor' });
         }
 
-        const sql = 'UPDATE users SET profile_picture = ? WHERE user_id = ?';
-        pool.query(sql, [profilePic.name, user_id], (err, result) => {
-            if (err) {
-                return res.status(500).json({ error: 'Hiba az adatbázis frissítésekor' });
-            }
+        return res.status(200).json({ message: 'Profilkép frissítve' });
+    });
+});
 
-            return res.status(200).json({ message: 'Profilkép frissítve' });
-        });
+app.get('/api/getProfilePic', authenticateToken, (req, res) => {
+    const user_id = req.user.id; // Assuming the user ID is part of the token
+
+    const sql = 'SELECT profile_picture FROM users WHERE user_id = ?';
+    pool.query(sql, [user_id], (err, result) => {
+        if (err) {
+            console.error('Error fetching profile picture:', err);
+            return res.status(500).json({ error: 'Hiba történt a profilkép lekérése során' });
+        }
+
+        if (result.length === 0) {
+            return res.status(404).json({ error: 'Felhasználó nem található' });
+        }
+
+        // Assuming the profile picture filename is in the `profile_picture` field
+        const profilePic = result[0].profile_picture;
+        res.json({ profilePicUrl: profilePic ? `/uploads/${profilePic}` : null });  // Return the image URL
     });
 });
 

@@ -13,13 +13,11 @@
 }
 
 .preview-img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover; /* A kép kitölti a kört */
-    object-position: center; /* A kép középre igazítása */
-    max-width: 100%;  /* A kép maximális szélessége */
-    max-height: 100%; /* A kép maximális magassága */
-    display: block; /* Elkerüli a nem kívánt alatta lévő fehér területet */
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin: 10px auto;
 }
 
 
