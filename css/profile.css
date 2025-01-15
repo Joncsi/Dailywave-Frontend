@@ -108,6 +108,15 @@ body {
     scale: 1.1;
 }
 
+main {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    flex-direction: column;
+    gap: 40px;
+}
+
 .profilePic{
     height: 150px;
     width: 150px;
@@ -119,4 +128,16 @@ body {
     background-image:url(../img/UnknownPic.png);
     background-size: cover;
     background-position: center;
+}
+
+.logoutBtn{
+    margin-top: 10px;
+    padding: 10px;
+    background-color: red;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    width: 100%;
+    transition: background-color 0.3s ease;
 }

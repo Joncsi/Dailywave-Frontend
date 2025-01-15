@@ -10,6 +10,7 @@ const fs = require('fs');
 const path = require('path');
 const cors = require('cors');
 const cookieParser = require('cookie-parser');
+const sharp = require('sharp');
 
 const app = express();
 
@@ -67,14 +68,14 @@ function authenticateToken(req, res, next) {
     const token = req.cookies.auth_token;
 
     if (!token) {
-        return res.status(403).json({ error: 'Nincsen tokened he' });
+        return res.status(401).json({ error: 'Hozzáférés megtagadva, kérlek jelentkezz be!' });
     }
 
     jwt.verify(token, JWT_SECRET, (err, user) => {
         if (err) {
-            return res.status(403).json({ error: 'Van tokened, de nem jáó' });
+            return res.status(403).json({ error: 'Érvénytelen vagy lejárt token!' });
         }
-        req.user = user;
+        req.user = user; // Hozzáadjuk a user adatokat a kéréshez
         next();
     });
 };
@@ -294,25 +295,40 @@ app.put('/api/editProfilePsw', authenticateToken, (req, res) => {
     });
 });
 
-app.put('/api/editProfilePic', authenticateToken, upload.single('profile_pic'), (req, res) => {
+
+
+app.put('/api/editProfilePic', authenticateToken, upload.single('profile_pic'), async (req, res) => {
     const user_id = req.user.id;
 
     if (!req.file) {
         return res.status(400).json({ error: 'Nincs kiválasztott fájl!' });
     }
 
-    const profilePic = req.file;
-    const uploadPath = path.join(__dirname, 'uploads', profilePic.filename);
+    const inputPath = path.join(uploadDir, req.file.filename);
+    const outputPath = path.join(uploadDir, `optimized-${req.file.filename}`);
 
-    const sql = 'UPDATE users SET profile_picture = ? WHERE user_id = ?';
-    pool.query(sql, [profilePic.filename, user_id], (err, result) => {
-        if (err) {
-            return res.status(500).json({ error: 'Hiba az adatbázis frissítésekor' });
-        }
+    try {
+        await sharp(inputPath)
+            .resize(300, 300) // Kép átméretezése
+            .toFormat('webp') // WebP formátum
+            .toFile(outputPath);
 
-        return res.status(200).json({ message: 'Profilkép frissítve' });
-    });
+        fs.unlinkSync(inputPath); // Eredeti fájl törlése
+
+        // Adatbázis frissítése
+        const sql = 'UPDATE users SET profile_picture = ? WHERE user_id = ?';
+        pool.query(sql, [`optimized-${req.file.filename}`, user_id], (err, result) => {
+            if (err) {
+                return res.status(500).json({ error: 'Hiba az adatbázis frissítésekor' });
+            }
+            res.status(200).json({ message: 'Profilkép sikeresen frissítve!' });
+        });
+    } catch (error) {
+        console.error('Hiba a kép feldolgozásakor:', error);
+        return res.status(500).json({ error: 'Hiba történt a profilkép feltöltése során' });
+    }
 });
+
 
 app.get('/api/getProfilePic', authenticateToken, (req, res) => {
     const user_id = req.user.id; // Assuming the user ID is part of the token
@@ -334,9 +350,17 @@ app.get('/api/getProfilePic', authenticateToken, (req, res) => {
     });
 });
 
+app.get('/api/checkAuth', authenticateToken, (req, res) => {
+    res.status(200).json({ message: 'Felhasználó bejelentkezve.' });
+});
+
 app.post('/api/logout', authenticateToken, (req, res) => {
-    //res.clearCookie('token');
-    res.status(200).json({ message: 'Sikeres kijelentkezés' });
+    res.clearCookie('auth_token', {
+        httpOnly: true,
+        secure: true,
+        sameSite: 'none',
+    });
+    res.status(200).json({ message: 'Sikeresen kijelentkeztél' });
 });
 
 app.listen(PORT, HOSTNAME, () => {

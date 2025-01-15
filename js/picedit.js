@@ -14,7 +14,7 @@ function previewImage(event) {
 async function saveProfilePic() {
     const fileInput = document.getElementById('profilePicInput');
     const file = fileInput.files[0];
-    
+
     if (!file) {
         return alert('Kérlek válassz ki egy képet!');
     }
