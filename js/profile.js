@@ -1,6 +1,32 @@
+// Bejelentkezési ellenőrzés minden oldalon
+async function checkLoginStatus() {
+    try {
+        // Ellenőrizni, hogy a felhasználó be van-e jelentkezve
+        const res = await fetch('http://127.0.0.1:3000/api/auth/checkAuth', {
+            method: 'GET',
+            credentials: 'include', // Az authentikációs süti elküldése
+        });
+
+        // Ha a válasz nem OK, irányítsuk át a bejelentkezési oldalra
+        if (!res.ok) {
+            alert('Kérlek, jelentkezz be!');
+            window.location.href = 'login.html'; // Átirányítás a login oldalra
+        }
+    } catch (error) {
+        console.error('Hiba történt a hitelesítés ellenőrzésekor:', error);
+        alert('Nem sikerült ellenőrizni a bejelentkezési állapotot.');
+        window.location.href = 'login.html'; // Ha hiba történt, irányítás a login oldalra
+    }
+}
+
+// Hívjuk meg ezt a funkciót minden oldalon, ahol szükséges a bejelentkezés ellenőrzése
+document.addEventListener('DOMContentLoaded', checkLoginStatus);
+
+
+// Profil név lekérése
 async function getProfileName() {
     try {
-        const res = await fetch('http://127.0.0.1:3000/api/getProfileName', {
+        const res = await fetch('http://127.0.0.1:3000/api/profile/getProfileName', {
             method: 'GET',
             credentials: 'include',
         });
@@ -19,11 +45,12 @@ async function getProfileName() {
     }
 }
 
+// Profilkép lekérése
 async function getProfilPic() {
     try {
-        const res = await fetch('http://127.0.0.1:3000/api/getProfilePic', {
+        const res = await fetch('http://127.0.0.1:3000/api/profile/getProfilePic', {
             method: 'GET',
-            credentials: 'include'
+            credentials: 'include',
         });
 
         if (res.ok) {
@@ -44,59 +71,30 @@ async function getProfilPic() {
     }
 }
 
-document.addEventListener('DOMContentLoaded', () => {
-    const btnLogout = document.getElementsByClassName('logoutBtn')[0];
-
-    btnLogout.addEventListener('click', logout);
-
-    async function logout() {
-        try {
-            const res = await fetch('http://127.0.0.1:3000/api/logout', {
-                method: 'POST',
-                credentials: 'include' // Küldi a cookie-kat a szervernek
-            });
-
-            const data = await res.json();
-
-            if (res.ok) {
-                alert(data.message); // Sikeres kijelentkezési üzenet
-                window.location.href = '../login.html'; // Átirányítás a bejelentkezési oldalra
-            } else if (data.errors) {
-                // Több hiba megjelenítése, ha van
-                alert(data.errors.map(e => e.error).join('\n'));
-            } else if (data.error) {
-                // Egyedi hiba megjelenítése
-                alert(data.error);
-            } else {
-                alert('Ismeretlen hiba történt');
-            }
-        } catch (error) {
-            console.error('Hiba történt a kijelentkezés során:', error);
-            alert('Nem sikerült kapcsolódni a szerverhez. Próbáld újra később.');
-        }
-    }
-});
-
-document.addEventListener('DOMContentLoaded', async () => {
+// Kijelentkezés funkció
+async function logout() {
     try {
-        const res = await fetch('http://127.0.0.1:3000/api/checkAuth', {
-            method: 'GET',
-            credentials: 'include', // Ellenőrzés sütivel
+        const res = await fetch('http://127.0.0.1:3000/api/auth/logout', {
+            method: 'POST',
+            credentials: 'include', // Küldi a cookie-kat a szervernek
         });
 
-        if (!res.ok) {
-            // Ha nem bejelentkezett felhasználó, irányítsa vissza a login oldalra
-            alert('Kérlek, jelentkezz be, hogy elérhesd a profiloldalt!');
-            window.location.href = 'login.html';
+        const data = await res.json();
+
+        if (res.ok) {
+            alert(data.message); // Sikeres kijelentkezési üzenet
+            window.location.href = '../login.html'; // Átirányítás a bejelentkezési oldalra
+        } else if (data.errors) {
+            // Több hiba megjelenítése, ha van
+            alert(data.errors.map(e => e.error).join('\n'));
+        } else if (data.error) {
+            // Egyedi hiba megjelenítése
+            alert(data.error);
+        } else {
+            alert('Ismeretlen hiba történt');
         }
     } catch (error) {
-        console.error('Hiba történt a hitelesítés során:', error);
-        alert('Nem sikerült ellenőrizni a bejelentkezési állapotot. Próbáld újra később!');
-        window.location.href = 'login.html';
+        console.error('Hiba történt a kijelentkezés során:', error);
+        alert('Nem sikerült kapcsolódni a szerverhez. Próbáld újra később.');
     }
-});
-
-document.addEventListener('DOMContentLoaded', () => {
-    getProfileName();
-    getProfilPic();
-});
+}

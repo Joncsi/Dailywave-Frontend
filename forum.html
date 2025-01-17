@@ -56,7 +56,8 @@
                     </i>
                     <i class="bi bi-person-circle ms-2"
                         style="font-size: 25px; display: inline-flex; align-items: center; margin-top: 0px;">
-                        <a href="profile.html" class="profileImg"><img src="img/profile.png" alt="" style="width: 40px; height: 40px;"></a>
+                        <a href="profile.html" class="profileImg"><img src="img/profile.png" alt=""
+                                style="width: 40px; height: 40px;"></a>
                     </i>
                 </form>
             </div>
@@ -76,7 +77,7 @@
                     <li><a class="dropdown-item" href="#">Lakás</a></li>
                 </ul>
             </div>
-            <button class="btn btn-info">Új téma hozzáadása</button>
+            <button class="btn btn-info" id="add-topic-btn">Új téma hozzáadása</button>
             <input type="text" class="form-control" placeholder="Keresés a Fórumban" style="max-width: 300px;">
         </div>
 
@@ -90,23 +91,28 @@
                             <th scope="col">Utolsó Hozzászólás</th>
                         </tr>
                     </thead>
-                    <tbody>
-                        <tr>
-                            <td><a href="" class="temaLink">Lakás/Ingatlan árak</a></td>
-                            <td>166 386</td>
-                            <td>ma, 13:37</td>
-                        </tr>
-                        <tr>
-                            <td> <a href="" class="temaLink">EUR/HUF</a></td>
-                            <td>78 908</td>
-                            <td>ma, 12:37</td>
-                        </tr>
-                        <tr>
-                            <td><a href="" class="temaLink">Ezüst</a></td>
-                            <td>17 721</td>
-                            <td>ma, 09:12</td>
-                        </tr>
-                    </tbody>
+                    <section id="topics-section">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Topic</th>
+                                    <th>Created By</th>
+                                    <th>Last Comment</th>
+                                </tr>
+                            </thead>
+                            <tbody id="topics-list">
+                                <!-- Topics will be populated here dynamically -->
+                            </tbody>
+                        </table>
+                    </section>
+                    <section id="chat-section" style="display: none;">
+                        <h2 id="chat-title"></h2>
+                        <div id="chat-messages"></div>
+                        <form id="chat-form">
+                            <input type="text" id="chat-input" placeholder="Write a comment..." required>
+                            <button type="submit">Send</button>
+                        </form>
+                    </section>
                 </table>
                 <nav aria-label="Page navigation">
                     <ul class="pagination justify-content-center">
@@ -142,6 +148,7 @@
 
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="script.js"></script>
 </body>
 
 </html>

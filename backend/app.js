@@ -151,8 +151,6 @@ app.post('/api/register', async (req, res) => {
     }
 });
 
-
-
 // login
 app.post('/api/login', (req, res) => {
     const { email, password } = req.body;
@@ -295,8 +293,6 @@ app.put('/api/editProfilePsw', authenticateToken, (req, res) => {
     });
 });
 
-
-
 app.put('/api/editProfilePic', authenticateToken, upload.single('profile_pic'), async (req, res) => {
     const user_id = req.user.id;
 
@@ -401,7 +397,7 @@ app.post("/api/topics", authenticateToken, (req, res) => {
         VALUES (?, ?, ?);
     `, [topic_title, user_id, currentDate], (err, result) => {
         if (err) {
-            console.error('Hiba történt a téma hozzáadása közben:', err);
+            console.error('Hiba történt a téma hozzáadása közben:', err);  // Naplózom a hibát
             return res.status(500).send("Hiba történt a témák hozzáadásakor");
         }
 
@@ -415,11 +411,6 @@ app.post("/api/topics", authenticateToken, (req, res) => {
         res.status(201).json(newTopic);  // Visszaküldjük az új témát
     });
 });
-
-
-
-
-
 
 // Get comments for a topic
 app.get("/api/comments/:topicId", (req, res) => {
@@ -439,26 +430,24 @@ app.get("/api/comments/:topicId", (req, res) => {
 // Add a comment to a topic
 app.post("/api/comments", async (req, res) => {
     const { topic_id, comment, user_id } = req.body;
-  
+
     if (!topic_id || !comment || !user_id) {
-      return res.status(400).json({ message: "Missing required fields" });
+        return res.status(400).json({ message: "Missing required fields" });
     }
-  
+
     try {
-      // Egyszerűen insertáljuk a kommentet, nincs szükség arra, hogy ellenőrizzük, hogy a felhasználó már kommentelt-e
-      await pool.promise().query(
-        "INSERT INTO comments (topic_id, comment, user_id) VALUES (?, ?, ?)",
-        [topic_id, comment, user_id]
-      );
-  
-      res.status(201).json({ message: "Comment added successfully" });
+        // Egyszerűen insertáljuk a kommentet, nincs szükség arra, hogy ellenőrizzük, hogy a felhasználó már kommentelt-e
+        await pool.promise().query(
+            "INSERT INTO comments (topic_id, comment, user_id) VALUES (?, ?, ?)",
+            [topic_id, comment, user_id]
+        );
+
+        res.status(201).json({ message: "Comment added successfully" });
     } catch (error) {
-      console.error("Error adding comment:", error);
-      res.status(500).json({ message: "An error occurred while adding the comment", error: error.message });
+        console.error("Error adding comment:", error);
+        res.status(500).json({ message: "An error occurred while adding the comment", error: error.message });
     }
-  });
-  
-  
+});
 
 app.listen(PORT, HOSTNAME, () => {
     console.log(`IP: http://${HOSTNAME}:${PORT}`);

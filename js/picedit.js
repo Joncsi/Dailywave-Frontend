@@ -24,7 +24,7 @@ async function saveProfilePic() {
 
     document.getElementById('loading').style.display = 'block';
 
-    const res = await fetch('http://127.0.0.1:3000/api/editProfilePic', {
+    const res = await fetch('http://127.0.0.1:3000/api/profile/editProfilePic', {
         method: 'PUT',
         body: formData,
         credentials: 'include'

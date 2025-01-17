@@ -140,3 +140,27 @@ body {
 .profileImg:hover{
     scale: 1.1;
 }
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 1em;
+}
+
+table th, table td {
+    border: 1px solid #ddd;
+    padding: 0.5em;
+    text-align: left;
+}
+
+#chat-section {
+    margin-top: 2em;
+}
+
+#chat-messages {
+    border: 1px solid #ddd;
+    padding: 1em;
+    height: 200px;
+    overflow-y: scroll;
+    margin-bottom: 1em;
+}

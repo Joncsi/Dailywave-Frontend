@@ -15,7 +15,7 @@ document.getElementById('btnChangePassword').addEventListener('click', async () 
 
     // Frissítjük a jelszót az API-n keresztül
     try {
-        const res = await fetch('http://127.0.0.1:3000/api/editProfilePsw', {
+        const res = await fetch('http://127.0.0.1:3000/api/profile/editProfilePsw', {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json'

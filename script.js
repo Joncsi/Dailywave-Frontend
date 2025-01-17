@@ -26,18 +26,57 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
+    // Bejelentkezési ellenőrzés minden oldalon
+async function checkLoginStatus() {
+    try {
+        // Ellenőrizni, hogy a felhasználó be van-e jelentkezve
+        const res = await fetch('http://127.0.0.1:3000/api/checkAuth', {
+            method: 'GET',
+            credentials: 'include', // Az authentikációs süti elküldése
+        });
+
+        // Ha a válasz nem OK, irányítsuk át a bejelentkezési oldalra
+        if (!res.ok) {
+            alert('Kérlek, jelentkezz be!');
+            window.location.href = 'login.html'; // Átirányítás a login oldalra
+        }
+    } catch (error) {
+        console.error('Hiba történt a hitelesítés ellenőrzésekor:', error);
+        alert('Nem sikerült ellenőrizni a bejelentkezési állapotot.');
+        window.location.href = 'login.html'; // Ha hiba történt, irányítás a login oldalra
+    }
+}
+
+// Hívjuk meg ezt a funkciót minden oldalon, ahol szükséges a bejelentkezés ellenőrzése
+document.addEventListener('DOMContentLoaded', checkLoginStatus);
+
+
     // Add a new topic
     addTopicBtn.addEventListener("click", async () => {
         const title = prompt("Enter the topic title:");
         if (title) {
-            await fetch(`${BASE_URL}/api/topics`, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ title }),
-            });
-            fetchTopics();
+            try {
+                const response = await fetch(`${BASE_URL}/api/topics`, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ title })
+                });
+
+                const data = await response.json();
+                console.log("Response Data:", data); // Hozzáadott naplózás
+
+                if (response.ok) {
+                    fetchTopics();
+                } else {
+                    alert(`Failed to add topic: ${data.message || "Unknown error"}`);
+                }
+            } catch (error) {
+                console.error("Error adding topic:", error);
+                alert("Failed to add topic. Please try again later.");
+            }
         }
     });
+
 
     // Handle topic selection
     topicsList.addEventListener("click", async (event) => {
@@ -66,7 +105,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const topicId = chatForm.dataset.topicId;
         const comment = chatInput.value;
         const userId = 11; // Replace with the actual user ID logic
-    
+
         try {
             const response = await fetch(`${BASE_URL}/api/comments`, {
                 method: "POST",
@@ -75,9 +114,9 @@ document.addEventListener("DOMContentLoaded", () => {
                 },
                 body: JSON.stringify({ topic_id: topicId, comment, user_id: userId }),
             });
-    
+
             const data = await response.json();
-            
+
             if (response.ok) {
                 // Successfully added the comment
                 chatInput.value = "";
