@@ -5,62 +5,41 @@ const validator = require('validator');
 const path = require('path')
 
 const editProfileName = (req, res) => {
-    const username = req.body.username;
+    const name = req.body.name;
     const user_id = req.user.id;
 
-    if (!username || validator.isEmpty(username.trim())) {
-        return res.status(400).json({ error: 'A felhasználónév nem lehet üres' });
-    }
+    const sql = 'UPDATE users SET username = COALESCE(NULLIF(?, ""), username) WHERE user_id = ?';
 
-    const sqlCheck = 'SELECT username FROM users WHERE user_id = ?';
-    db.query(sqlCheck, [user_id], (err, result) => {
+    db.query(sql, [name, user_id], (err, result) => {
         if (err) {
-            return res.status(500).json({ error: 'Hiba történt a felhasználó adatainak lekérése során' });
+            return res.status(500).json({ error: 'Hiba az SQL-ben' });
         }
 
-        const currentUsername = result[0].username;
-        if (username === currentUsername) {
-            return res.status(400).json({ error: 'Az új felhasználónév nem lehet azonos a jelenlegi névvel!' });
-        }
-
-        const checkSql = 'SELECT username FROM users WHERE username = ? AND user_id != ?';
-        db.query(checkSql, [username, user_id], (err2, result2) => {
-            if (err2) {
-                return res.status(500).json({ error: 'Hiba történt a felhasználónév ellenőrzése során' });
-            }
-
-            if (result2.length > 0) {
-                return res.status(400).json({ error: 'Ez a felhasználónév már foglalt' });
-            }
-
-            const sql = 'UPDATE users SET username = ? WHERE user_id = ?';
-            db.query(sql, [username, user_id], (err3, result3) => {
-                if (err3) {
-                    return res.status(500).json({ error: 'Hiba történt a felhasználónév frissítése során' });
-                }
-
-                res.status(200).json({ message: 'Felhasználónév sikeresen módosítva!', username: username });
-            });
-        });
+        return res.status(200).json({ message: 'Név frissítve ' });
     });
 };
 
 const getProfileName = (req, res) => {
     const user_id = req.user.id;
+    console.log('User ID:', user_id);  // Logolj a konzolra, hogy tényleg van-e user_id
+
     const sql = 'SELECT username FROM users WHERE user_id = ?';
     db.query(sql, [user_id], (err, result) => {
         if (err) {
-            return res.status(500).json({ error: 'Hiba történt a felhasználó adatainak lekérése során' });
+            console.error('Error querying the database:', err);
+            return res.status(500).json({ error: 'Hiba a név lekérésekor' });
         }
 
-        if (result.length === 0) {
-            return res.status(404).json({ error: 'Felhasználó nem található' });
-        }
+        console.log('Query result:', result);  // Logolj, hogy mit ad vissza a lekérdezés
 
-        res.status(200).json({ name: result[0].username });
+        if (result.length > 0) {
+            return res.json({ name: result[0].username });  // Visszaadjuk a 'name' kulcsot
+        } else {
+            console.log('No user found with ID:', user_id);
+            return res.status(404).json({ error: 'Név nem található' });
+        }
     });
 };
-
 const editProfilePsw = (req, res) => {
     const psw = req.body.psw;
     const user_id = req.user.id;
@@ -87,38 +66,43 @@ const editProfilePsw = (req, res) => {
     });
 };
 
-const uploadDir = path.join(__dirname, 'uploads');
-
 const editProfilePic = (req, res) => {
     const user_id = req.user.id;
     const profile_picture = req.file ? req.file.filename : null;
 
-    const sql = 'UPDATE users SET profile_picture = COALESCE(NULLIF(?, ""), profile_picture) WHERE user_id = ?'
+    if (!user_id) {
+        return res.status(400).json({ error: 'User ID is required' });
+    }
+
+    const sql = 'UPDATE users SET profile_picture = COALESCE(NULLIF(?, ""), profile_picture) WHERE user_id = ?';
 
     db.query(sql, [profile_picture, user_id], (err, result) => {
         if (err) {
-            return res.status(500).json({ error: 'Hiba az SQL-ben' });
+            console.error('SQL Error: ', err);  // Log the error for debugging
+            return res.status(500).json({ error: 'Database error, please try again later.' });
         }
 
-        return res.status(200).json({ message: 'Profilkép frissítve ' });
+        if (result.affectedRows === 0) {
+            return res.status(404).json({ error: 'User not found' });
+        }
+
+        return res.status(200).json({ message: 'Profile picture updated successfully' });
     });
 };
+
+
 const getProfilePic = (req, res) => {
     const user_id = req.user.id;
-
     const sql = 'SELECT profile_picture FROM users WHERE user_id = ?';
     db.query(sql, [user_id], (err, result) => {
         if (err) {
-            console.error('Error fetching profile picture:', err);
-            return res.status(500).json({ error: 'Hiba történt a profilkép lekérése során' });
+            return res.status(500).json({ error: 'Hiba a profilkép lekérésekor' });
         }
-
-        if (result.length === 0) {
-            return res.status(404).json({ error: 'Felhasználó nem található' });
+        if (result.length > 0 && result[0].profile_picture) {
+            return res.json({ profilePicUrl: `/uploads/${result[0].profile_picture}` });
+        } else {
+            return res.json({ profilePicUrl: null });
         }
-
-        const profilePic = result[0].profile_picture;
-        res.json({ profilePicUrl: profilePic ? `/uploads/${profilePic}` : null });  // Return the image URL
     });
 };
 

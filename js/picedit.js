@@ -20,26 +20,31 @@ async function saveProfilePic() {
     }
 
     const formData = new FormData();
-    formData.append('profile_pic', file);
+    formData.append('profilePic', file);  // Ensure this matches the backend configuration
 
     document.getElementById('loading').style.display = 'block';
 
-    const res = await fetch('http://127.0.0.1:3000/api/profile/editProfilePic', {
-        method: 'PUT',
-        body: formData,
-        credentials: 'include'
-    });
+    try {
+        const res = await fetch('http://127.0.0.1:3000/api/profile/editProfilePic', {
+            method: 'PUT',
+            body: formData,
+            credentials: 'include'
+        });
 
-    document.getElementById('loading').style.display = 'none';
+        document.getElementById('loading').style.display = 'none';
 
-    const data = await res.json();
-
-    if (res.ok) {
-        const profilePicUrl = data.profilePicUrl;
-        document.getElementById('preview').src = profilePicUrl;
-        alert('Profilkép sikeresen frissítve!');
-        window.location.href = 'profile.html'; // Vissza a profil oldalra
-    } else {
-        alert(data.error || 'Hiba történt a profilkép frissítésekor');
+        if (res.ok) {
+            const data = await res.json();
+            const profilePicUrl = data.profilePicUrl;
+            document.getElementById('preview').src = profilePicUrl;
+            alert('Profilkép sikeresen frissítve!');
+            window.location.href = 'profile.html'; // Vissza a profil oldalra
+        } else {
+            const data = await res.json();
+            alert(data.error || 'Hiba történt a profilkép frissítésekor');
+        }
+    } catch (error) {
+        document.getElementById('loading').style.display = 'none';
+        alert('Hiba történt a kapcsolatban. Kérlek próbáld újra!');
     }
 }

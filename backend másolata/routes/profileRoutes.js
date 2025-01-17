@@ -7,7 +7,7 @@ const router = express.Router();
 
 router.put('/editProfileName', authenticateToken, editProfileName);
 router.put('/editProfilePsw', authenticateToken, editProfilePsw);
-router.put('/editProfilePic', authenticateToken, upload.single('profile_picture'), editProfilePic);
+router.put('/editProfilePic', authenticateToken, upload.single('profilePic'), editProfilePic);
 router.get('/getProfilePic', authenticateToken, getProfilePic);
 router.get('/getProfileName', authenticateToken, getProfileName);
 

@@ -49,40 +49,46 @@ body {
     border-radius: 10px;
     padding: 20px;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-    border: 2px solid rgba(49, 81, 143, 0.8);
-    /* Kék színű keret */
+    border: 2px solid rgba(49, 81, 143, 0.8); /* Kék színű keret */
     width: 100%;
-    max-width: 400px;
-    /* Maximális szélesség a kényelem érdekében */
+    max-width: 400px; /* Maximális szélesség a kényelem érdekében */
     display: flex;
     flex-direction: column;
     gap: 20px;
     align-items: center;
     justify-content: center;
-    margin: auto auto;
-    /* Vízszintes középre igazítás és függőleges eltolás */
+    margin: auto auto; /* Vízszintes középre igazítás és függőleges eltolás */
 }
 
-
-/* Profilkép */
-.profile-image img {
-    width: 120px;
-    /* A kép mérete */
-    height: 120px;
+/* Profilkép konténer */
+.profile-image {
+    height: 150px;
+    width: 150px;
     border-radius: 50%;
-    /* Kör alakú */
-    margin-bottom: 15px;
-    /* Kép és név közötti távolság */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden; /* Levágás, ha a kép túl nagy */
+    position: relative;
 }
+
+/* Profilkép megjelenítése */
+#profilePic {
+    width: 100%;
+    height: 100%;
+    object-fit: contain; /* A kép kitöltése, anélkül hogy le lenne vágva */
+    object-position: center; /* A kép közepét mutatja */
+    max-width: 100%; /* Maximális szélesség */
+    max-height: 100%; /* Maximális magasság */
+}
+
 
 /* Név */
 .profile-info .name {
     font-size: 22px;
-    color: rgba(49, 81, 143, 0.8);
-    /* Kék szín */
+    color: rgba(49, 81, 143, 0.8); /* Kék szín */
     margin: 0;
-    text-align: center;
-    /* Középre igazítás */
+    text-align: center; /* Középre igazítás */
 }
 
 /* Gombok */
@@ -108,6 +114,7 @@ body {
     scale: 1.1;
 }
 
+/* Alap elrendezés */
 main {
     display: flex;
     justify-content: center;
@@ -117,6 +124,7 @@ main {
     gap: 40px;
 }
 
+/* Profilkép stílusa */
 .profilePic {
     height: 150px;
     width: 150px;
@@ -126,10 +134,12 @@ main {
     align-items: center;
     position: relative;
     background-image: url(../img/UnknownPic.png);
-    background-size: cover;
+    background-size: contain;   /* A kép méretezése úgy, hogy teljesen látszódjon */
     background-position: center;
+    background-repeat: no-repeat;  /* A kép ne ismétlődjön */
 }
 
+/* Kijelentkezési gomb */
 .logoutBtn {
     margin-top: 10px;
     padding: 10px;
@@ -140,4 +150,8 @@ main {
     cursor: pointer;
     width: 100%;
     transition: background-color 0.3s ease;
+}
+
+.logoutBtn:hover {
+    background-color: #d9534f;
 }

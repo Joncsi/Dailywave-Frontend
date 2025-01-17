@@ -36,12 +36,15 @@ async function getProfileName() {
             console.log('Aktuális név:', data.name);
 
             const userNameElement = document.getElementById('user-name');
-            userNameElement.textContent = data.name;
+            userNameElement.textContent = data.name;  // Ez a 'username' lesz most
         } else {
-            console.error('Hiba a név lekérésekor');
+            const data = await res.json();
+            console.error('Hiba a név lekérésekor:', data.error);
+            alert(data.error || 'Hiba történt a név lekérésekor');
         }
     } catch (error) {
         console.error('Hálózati hiba a név lekérésekor:', error);
+        alert('Nem sikerült lekérni a nevet');
     }
 }
 
@@ -98,3 +101,8 @@ async function logout() {
         alert('Nem sikerült kapcsolódni a szerverhez. Próbáld újra később.');
     }
 }
+
+document.addEventListener('DOMContentLoaded', () => {
+    getProfileName();
+    getProfilPic();
+});
