@@ -15,8 +15,12 @@ const getAlltopics = (req, res) => {
 };
 
 const uploadTopic = (req, res) => {
+    if (!req.user || !req.user.id) {
+        return res.status(401).json({ error: 'Nem vagy bejelentkezve' });
+    }
+
     const { topic_title } = req.body;
-    const user_id = req.user.id;
+    const user_id = req.user.id;  // Most már biztos, hogy nem undefined
 
     if (!topic_title) {
         return res.status(400).send("A cím megadása kötelező.");
@@ -25,7 +29,7 @@ const uploadTopic = (req, res) => {
     const currentDate = new Date().toISOString();
 
     db.query(`
-        INSERT INTO topic (topic_title, user_id, date) 
+        INSERT INTO topics (topic_title, user_id, date) 
         VALUES (?, ?, ?);
     `, [topic_title, user_id, currentDate], (err, result) => {
         if (err) {
@@ -43,6 +47,7 @@ const uploadTopic = (req, res) => {
         res.status(201).json(newTopic);
     });
 };
+
 
 const getComments = (req, res) => {
     const topicId = parseInt(req.params.topicId, 10);

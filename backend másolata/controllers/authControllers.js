@@ -47,9 +47,9 @@ const login = (req, res) => {
 
                 res.cookie('auth_token', token, {
                     httpOnly: true,
-                    secure: true,
-                    sameSite: 'none',
-                    maxAge: 3600000 * 24 * 31 * 12
+                    secure: process.env.NODE_ENV === 'production',
+                    sameSite: 'strict',
+                    maxAge: 3600000 * 24 * 31 * 12,
                 });
 
                 return res.status(200).json({ message: 'Sikeres bejelentkezés' });
@@ -120,7 +120,11 @@ const logout = (req, res) => {
 };
 
 const checkAuth = (req, res) => {
-    res.status(200).json({ message: 'Felhasználó bejelentkezve.' });
+    if (!req.user) {
+        return res.status(401).json({ error: 'Hozzáférés megtagadva!' });
+    }
+
+    res.status(200).json({ message: 'Felhasználó bejelentkezve.', user: req.user });
 };
 
 module.exports = { register, login, logout, checkAuth }

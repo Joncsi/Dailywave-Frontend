@@ -9,46 +9,59 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const BASE_URL = "http://localhost:3000"; // Backend base URL
 
-    // Fetch and display topics
     async function fetchTopics() {
-        const response = await fetch(`${BASE_URL}/api/topics`);
-        const topics = await response.json();
+        try {
+            const response = await fetch('http://127.0.0.1:3000/api/topics/getAlltopics', {
+                method: 'GET',
+                credentials: 'include', // Sütik küldése
+            });
 
-        topicsList.innerHTML = "";
-        topics.forEach((topic) => {
-            const row = document.createElement("tr");
-            row.innerHTML = `
-                <td><a href="#" data-id="${topic.topic_id}" class="topic-link">${topic.topic_title}</a></td>
-                <td>${topic.username}</td>
-                <td>${topic.last_comment || "No comments yet"}</td>
-            `;
-            topicsList.appendChild(row);
-        });
+            if (!response.ok) {
+                throw new Error('Hozzáférés megtagadva vagy hiba történt az adatok lekérésekor.');
+            }
+
+            const topics = await response.json();
+            if (!Array.isArray(topics)) {
+                throw new Error('Érvénytelen válaszformátum: tömböt vártunk.');
+            }
+
+            // Témák kirajzolása
+            topicsList.innerHTML = topics.map(topic => `
+                <tr>
+                    <td><a href="#" data-id="${topic.topic_id}" class="topic-link">${topic.topic_title}</a></td>
+                    <td>${topic.username}</td>
+                    <td>${topic.last_comment || "No comments yet"}</td>
+                </tr>
+            `).join('');
+        } catch (error) {
+            console.error('Error fetching topics:', error.message);
+            alert('Nem sikerült betölteni a fórum témákat. Kérlek, jelentkezz be újra!');
+        }
     }
 
     // Bejelentkezési ellenőrzés minden oldalon
-async function checkLoginStatus() {
-    try {
-        // Ellenőrizni, hogy a felhasználó be van-e jelentkezve
-        const res = await fetch('http://127.0.0.1:3000/api/checkAuth', {
-            method: 'GET',
-            credentials: 'include', // Az authentikációs süti elküldése
-        });
+    async function checkLoginStatus() {
+        try {
+            // Ellenőrizni, hogy a felhasználó be van-e jelentkezve
+            const res = await fetch('http://127.0.0.1:3000/api/auth/checkAuth', {
+                method: 'GET',
+                credentials: 'include', // Az authentikációs süti elküldése
+            });
 
-        // Ha a válasz nem OK, irányítsuk át a bejelentkezési oldalra
-        if (!res.ok) {
-            alert('Kérlek, jelentkezz be!');
-            window.location.href = 'login.html'; // Átirányítás a login oldalra
+            // Ha a válasz nem OK, irányítsuk át a bejelentkezési oldalra
+            if (!res.ok) {
+                alert('Kérlek, jelentkezz be!');
+                window.location.href = 'login.html'; // Átirányítás a login oldalra
+            }
+        } catch (error) {
+            console.error('Hiba történt a hitelesítés ellenőrzésekor:', error);
+            alert('Nem sikerült ellenőrizni a bejelentkezési állapotot.');
+            window.location.href = 'login.html'; // Ha hiba történt, irányítás a login oldalra
         }
-    } catch (error) {
-        console.error('Hiba történt a hitelesítés ellenőrzésekor:', error);
-        alert('Nem sikerült ellenőrizni a bejelentkezési állapotot.');
-        window.location.href = 'login.html'; // Ha hiba történt, irányítás a login oldalra
     }
-}
 
-// Hívjuk meg ezt a funkciót minden oldalon, ahol szükséges a bejelentkezés ellenőrzése
-document.addEventListener('DOMContentLoaded', checkLoginStatus);
+    // Hívjuk meg ezt a funkciót minden oldalon, ahol szükséges a bejelentkezés ellenőrzése
+    document.addEventListener('DOMContentLoaded', checkLoginStatus);
 
 
     // Add a new topic
@@ -56,17 +69,22 @@ document.addEventListener('DOMContentLoaded', checkLoginStatus);
         const title = prompt("Enter the topic title:");
         if (title) {
             try {
-                const response = await fetch(`${BASE_URL}/api/topics`, {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ title })
+                const response = await fetch('http://localhost:3000/api/topics/uploadTopic', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                        // A cookie automatikusan elküldésre kerül, ha a credentials be van állítva
+                    },
+                    credentials: 'include',  // Ez biztosítja, hogy a cookie átkerüljön
+                    body: JSON.stringify({ topic_title: title })
                 });
-
+    
                 const data = await response.json();
                 console.log("Response Data:", data); // Hozzáadott naplózás
-
+    
                 if (response.ok) {
-                    fetchTopics();
+                    alert("Topic successfully added!");
+                    // Frissítheted a topic listát, ha szükséges
                 } else {
                     alert(`Failed to add topic: ${data.message || "Unknown error"}`);
                 }
@@ -76,6 +94,7 @@ document.addEventListener('DOMContentLoaded', checkLoginStatus);
             }
         }
     });
+
 
 
     // Handle topic selection
@@ -89,7 +108,10 @@ document.addEventListener('DOMContentLoaded', checkLoginStatus);
             chatTitle.textContent = event.target.textContent;
 
             // Fetch and display comments for the topic
-            const response = await fetch(`${BASE_URL}/api/comments/${topicId}`);
+            const response = await fetch(`${BASE_URL}/api/topics/getComments/${topicId}`, {
+                method: 'GET',
+                credentials: 'include'
+            });
             const comments = await response.json();
             chatMessages.innerHTML = comments
                 .map((comment) => `<p><strong>${comment.username}</strong>: ${comment.comment}</p>`)
@@ -107,7 +129,7 @@ document.addEventListener('DOMContentLoaded', checkLoginStatus);
         const userId = 11; // Replace with the actual user ID logic
 
         try {
-            const response = await fetch(`${BASE_URL}/api/comments`, {
+            const response = await fetch(`${BASE_URL}/api/topics/addComment`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",

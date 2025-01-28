@@ -6,8 +6,8 @@ const { getAlltopics, getComments, addComment, uploadTopic } = require('../contr
 const router = express.Router();
 
 router.get('/getAlltopics', authenticateToken, getAlltopics);
-router.post('/uploadTopic', authenticateToken, upload.single('topic'), uploadTopic);
-router.get('/getComments/:topicId', authenticateToken, getComments);
-router.post('/addComment', authenticateToken, addComment);
+router.post('/uploadTopic', upload.single('topic'), uploadTopic);
+router.get('/getComments/:topicId', getComments);
+router.post('/addComment', addComment);
 
 module.exports = router;
